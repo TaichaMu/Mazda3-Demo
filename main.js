@@ -27,7 +27,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 // モデル読み込み
 const loader = new GLTFLoader();
-loader.load('/models/mazda3.glb', (gltf) => {
+loader.load('./models/mazda3.glb', function(gltf) {
     scene.add(gltf.scene);
 }, undefined, (error) => {
     console.error(error);
