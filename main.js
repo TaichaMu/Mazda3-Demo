@@ -25,6 +25,7 @@ directionalLight.position.set(5, 10, 7.5);
 scene.add(directionalLight);
 
 // モデル読み込み
+console.log("Loader start"); // デバッグログ
 const loader = new GLTFLoader();
 loader.load(
     './models/mazda3.glb',
