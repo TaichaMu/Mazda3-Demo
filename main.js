@@ -29,7 +29,8 @@ const loader = new GLTFLoader();
 loader.load(
     './models/mazda3.glb',
     function (gltf) {
-    scene.add(gltf.scene);
+        console.log(gltf.scene); // ← ここで確認
+        scene.add(gltf.scene);
     },
     undefined,
         function (error) {
