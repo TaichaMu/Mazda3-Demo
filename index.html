@@ -2,13 +2,38 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Mazda3 3D Viewer</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { display: block; }
-    </style>
+    <title>Mazda3 3D Demo</title>
 </head>
 <body>
-    <script type="module" src="./main.js"></script>
+    <script type="module">
+        // Three.js 本体をCDNから読み込む
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+    
+        // GLTFLoader をCDNから読み込む
+        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/GLTFLoader.js';
+
+        // シーン作成
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // GLTFLoaderで3Dモデル読み込み
+        const loader = new GLTFLoader();
+        loader.load('./models/mazda3.glb', function(gltf) {
+        scene.add(gltf.scene);
+        }, undefined, function(error){
+        console.error(error);
+        });
+
+        camera.position.z = 5;
+
+        function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+        }
+        animate();
+    </script>
 </body>
 </html>
