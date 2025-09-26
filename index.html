@@ -1,108 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>Mazda3-3DView</title>
-    <script async src="https://unpkg.com/es-module-shims@1.3.0/dist/es-module-shims.js"></script>
-    <script type="importmap">
-    {
-        "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js",
-        "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/"
-        }
-    }
-
-</script>
-    </script>
+    <meta charset="UTF-8" />
+    <title>3Dページ</title>
     <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden; /* スクロールバーを非表示 */
-        background-color: black; /* 背景を黒に */
-    }
-    #intro, #sound {
-        position: fixed;
-        inset: 0;
-        background: black;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        z-index: 10;
-        }
-    #sound { display: none; }
-    button {
-        padding: 1em 2em;
-        margin-top: 20px;
-        font-size: 1.2em;
-        cursor: pointer;
-    }
-    canvas {
-        display: block;
-        width: 100vw;   /* ビューポート幅ぴったり */
-        height: 100vh;  /* ビューポート高さぴったり */
-    }
+        body { margin: 0; font-family: sans-serif; }
+        .page { display: none; text-align: center; padding: 50px; }
+        .active { display: block; }
+        button { padding: 10px 20px; font-size: 18px; }
     </style>
+    <script type="importmap">
+        {
+        "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="main.js"></script>
 </head>
 <body>
-    <!-- Step1: 警告 -->
-    <div id="intro">
-    <h1>このページについて</h1>
-    <p>3Dデモを表示します。音声が再生されます、音量を上げて閲覧ください。<br>
-        また、ユーザ体験向上のため、データの収集をしています。</p>
-    <button id="agreeBtn">同意して進む</button>
+    <!-- ページ1: 警告 -->
+        <div id="page1" class="page active">
+        <h1>データ収集に関する警告</h1>
+        <p>このページでは利用状況のデータを収集します。同意いただける方のみ進んでください。</p>
+        <button onclick="goToPage(2)">同意する</button>
     </div>
 
-    <!-- Step2: サウンド確認 -->
-    <div id="sound">
-    <h2>クリックでスタート</h2>
-    <button id="soundBtn">START</button>
+    <!-- ページ2: スタート前 -->
+        <div id="page2" class="page">
+        <h1>このコンテンツでは音が出ます。</h1>
+        <p>音量を上げてお楽しみください。</p>
+        <button onclick="startExperience()">Start</button>
     </div>
 
-    <!-- Step3: 3Dビュー -->
-    <canvas id="webgl"></canvas>
-    
-    <!-- main.js を読み込む -->
-    <script type="module" src="./main.js"></script>
+    <!-- ページ3: 3Dビュー -->
+    <div id="page3" class="page">
+    <div id="viewer"></div>
+    </div>
 
-    <script>
-    const intro = document.getElementById("intro");
-    const sound = document.getElementById("sound");
-    const soundBtn = document.getElementById("soundBtn");
+<script type="module">
+    import { startMain } from './main.js';
 
-    // Step1 -> Step2
-    document.getElementById("agreeBtn").addEventListener("click", () => {
-        intro.style.display = "none";
-        sound.style.display = "flex";
-    });
+    function goToPage(num) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + num).classList.add('active');
+    }
 
-    // Step2 -> Step3 + 音を鳴らす
-    soundBtn.addEventListener("click", async () => {
-    sound.style.display = "none";
+    window.goToPage = goToPage;
 
-    // Web Audio API: 効果音
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    await audioCtx.resume();
-
-    const osc = audioCtx.createOscillator();
-    osc.type = "sine";
-    osc.frequency.value = 440;
-    osc.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.2);
-
-    // ここで main.js の初期化を呼びたい場合は、
-    // main.js 内で `export function init3D()` を定義しておいて
-    // window.init3D() で呼び出せるようにしておく
-        if (window.init3D) {
-        window.init3D();
-        }
-    });
+    window.startExperience = () => {
+        goToPage(3);
+      startMain(document.getElementById("viewer")); // main.js側で関数化したやつ
+    };
     </script>
 </body>
 </html>
