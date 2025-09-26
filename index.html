@@ -6,11 +6,13 @@
     <script async src="https://unpkg.com/es-module-shims@1.3.0/dist/es-module-shims.js"></script>
     <script type="importmap">
     {
-    "imports": {
+        "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js",
         "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/"
         }
     }
+
+</script>
     </script>
     <style>
     html, body {
@@ -21,6 +23,25 @@
         overflow: hidden; /* スクロールバーを非表示 */
         background-color: black; /* 背景を黒に */
     }
+    #intro, #sound {
+        position: fixed;
+        inset: 0;
+        background: black;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        z-index: 10;
+        }
+    #sound { display: none; }
+    button {
+        padding: 1em 2em;
+        margin-top: 20px;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
     canvas {
         display: block;
         width: 100vw;   /* ビューポート幅ぴったり */
@@ -29,6 +50,59 @@
     </style>
 </head>
 <body>
+    <!-- Step1: 警告 -->
+    <div id="intro">
+    <h1>このページについて</h1>
+    <p>3Dデモを表示します。音声が再生されます、音量を上げて閲覧ください。<br>
+        また、ユーザ体験向上のため、データの収集をしています。</p>
+    <button id="agreeBtn">同意して進む</button>
+    </div>
+
+    <!-- Step2: サウンド確認 -->
+    <div id="sound">
+    <h2>クリックでスタート</h2>
+    <button id="soundBtn">START</button>
+    </div>
+
+    <!-- Step3: 3Dビュー -->
+    <canvas id="webgl"></canvas>
+    
+    <!-- main.js を読み込む -->
     <script type="module" src="./main.js"></script>
+
+    <script>
+    const intro = document.getElementById("intro");
+    const sound = document.getElementById("sound");
+    const soundBtn = document.getElementById("soundBtn");
+
+    // Step1 -> Step2
+    document.getElementById("agreeBtn").addEventListener("click", () => {
+        intro.style.display = "none";
+        sound.style.display = "flex";
+    });
+
+    // Step2 -> Step3 + 音を鳴らす
+    soundBtn.addEventListener("click", async () => {
+    sound.style.display = "none";
+
+    // Web Audio API: 効果音
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    await audioCtx.resume();
+
+    const osc = audioCtx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = 440;
+    osc.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.2);
+
+    // ここで main.js の初期化を呼びたい場合は、
+    // main.js 内で `export function init3D()` を定義しておいて
+    // window.init3D() で呼び出せるようにしておく
+        if (window.init3D) {
+        window.init3D();
+        }
+    });
+    </script>
 </body>
 </html>
