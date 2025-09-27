@@ -4,34 +4,33 @@
     <meta charset="UTF-8" />
     <title>3Dページ</title>
     <style>
-        body { margin: 0; font-family: sans-serif; }
-        .page { display: none; text-align: center; padding: 50px; }
-        .active { display: block; }
-        button { padding: 10px 20px; font-size: 18px; }
+    body { margin: 0; font-family: sans-serif; }
+    .page { display: none; text-align: center; padding: 50px; }
+    .active { display: block; }
+    button { padding: 10px 20px; font-size: 18px; }
     </style>
     <script type="importmap">
-        {
+    {
         "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
         }
     }
     </script>
-    <script type="module" src="main.js"></script>
 </head>
 <body>
-    <!-- ページ1: 警告 -->
-        <div id="page1" class="page active">
-        <h1>データ収集に関する警告</h1>
-        <p>このページでは利用状況のデータを収集します。同意いただける方のみ進んでください。</p>
-        <button onclick="goToPage(2)">同意する</button>
+        <!-- ページ1: 警告 -->
+    <div id="page1" class="page active">
+    <h1>データ収集に関する警告</h1>
+    <p>このページでは利用状況のデータを収集します。同意いただける方のみ進んでください。</p>
+    <button onclick="goToPage(2)">同意する</button>
     </div>
 
     <!-- ページ2: スタート前 -->
-        <div id="page2" class="page">
-        <h1>このコンテンツでは音が出ます。</h1>
-        <p>音量を上げてお楽しみください。</p>
-        <button onclick="startExperience()">Start</button>
+    <div id="page2" class="page">
+    <h1>このコンテンツでは音が出ます。</h1>
+    <p>音量を上げてお楽しみください。</p>
+    <button onclick="startExperience()">Start</button>
     </div>
 
     <!-- ページ3: 3Dビュー -->
@@ -40,35 +39,18 @@
     </div>
 
     <script type="module">
-        import { startMain } from './main.js';
+    import { startMain } from './main.js';
 
     function goToPage(num) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById('page' + num).classList.add('active');
     }
 
-    // グローバル公開
+    // グローバル化してHTMLから呼べるようにする
     window.goToPage = goToPage;
-
     window.startExperience = () => {
         goToPage(3);
-        startMain(document.getElementById("viewer")); 
-    };
-    </script>
-    
-    <script type="module">
-        import { startMain } from './main.js';
-
-    function goToPage(num) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById('page' + num).classList.add('active');
-    }
-
-    window.goToPage = goToPage;
-
-    window.startExperience = () => {
-        goToPage(3);
-      startMain(document.getElementById("viewer")); // main.js側で関数化したやつ
+        startMain(document.getElementById("viewer"));
     };
     </script>
 </body>
