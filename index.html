@@ -1,19 +1,65 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>MAZDA3-3DViewer</title>
-    <script async src="https://unpkg.com/es-module-shims@1.3.0/dist/es-module-shims.js"></script>
+    <meta charset="UTF-8" />
+    <title>3Dページ</title>
+    <style>
+        body { margin: 0; font-family: sans-serif; overflow: hidden; }
+        .page { display: none; text-align: center; padding: 50px; }
+        .active { display: block; }
+        button { padding: 10px 20px; font-size: 18px; cursor: pointer; }
+        #viewer { width: 100vw; height: 100vh; }
+    </style>
+    <!-- importmap -->
     <script type="importmap">
     {
-    "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js",
-        "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/"
-    }
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
     }
     </script>
 </head>
 <body>
-    <script type="module" src="./main.js"></script>
+    <!-- ページ1: 警告 -->
+    <div id="page1" class="page active">
+        <h1>データ収集に関する警告</h1>
+        <p>このページでは利用状況のデータを収集します。同意いただける方のみ進んでください。</p>
+        <button onclick="goToPage(2)">同意する</button>
+    </div>
+
+    <!-- ページ2: スタート前 -->
+    <div id="page2" class="page">
+        <h1>このコンテンツでは音が出ます。</h1>
+        <p>音量を上げてお楽しみください。</p>
+        <button onclick="startExperience()">Start</button>
+    </div>
+
+    <!-- ページ3: 3Dビュー -->
+    <div id="page3" class="page">
+        <div id="viewer"></div>
+    </div>
+
+    <!-- ページ切り替えと3D起動 -->
+    <script type="module">
+        import { startMain } from './main.js';
+
+        function goToPage(num) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page' + num).classList.add('active');
+
+            // 3ページ目に行ったら3D起動
+            if (num === 3) {
+                startMain(document.getElementById("viewer"));
+            }
+        }
+
+        // グローバルに公開（onclickから呼べるようにする）
+        window.goToPage = goToPage;
+
+        window.startExperience = () => {
+            goToPage(3);
+        };
+    </script>
 </body>
 </html>
