@@ -19,6 +19,8 @@ scene.add(directionalLight);
 // モデルの読み込み
 const loader = new GLTFLoader();
 loader.load('./models/mazda3.glb', (gltf) => {
+    gltf.scene.position.set(0, 0, 0);
+    gltf.scene.scale.set(1, 1, 1);
     scene.add(gltf.scene);
 }, undefined, (error) => {
     console.error(error);
@@ -28,7 +30,7 @@ loader.load('./models/mazda3.glb', (gltf) => {
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-camera.position.set(0, 1, 5);
+camera.position.set(5, 1, 0);
 
 // アニメーションループ
 function animate() {
