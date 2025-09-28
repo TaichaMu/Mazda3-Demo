@@ -22,11 +22,6 @@ loader.load('./models/mazda3.glb', (gltf) => {
     gltf.scene.position.set(0, 0, 0);
     gltf.scene.scale.set(1, 1, 1);
     scene.add(gltf.scene);
-    welcomeText = gltf.scene.getObjectByName("Welcome");
-    if (welcomeText) {
-        // マテリアルを変更可能にする
-        welcomeText.material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    }
 }, undefined, (error) => {
     console.error(error);
 });
@@ -47,26 +42,6 @@ controls.addEventListener('start', () => {
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
-
-    if (welcomeText) {
-        // オブジェクトの正面ベクトル
-        const objDir = new THREE.Vector3();
-        welcomeText.getWorldDirection(objDir).normalize();
-
-        // カメラ → オブジェクト方向
-        const camDir = new THREE.Vector3();
-        camDir.subVectors(welcomeText.position, camera.position).normalize();
-
-        // 内積で正面判定
-        const dot = objDir.dot(camDir);
-
-        if (dot > 0.9) {
-            welcomeText.material.color.set(0xffa500); // オレンジ
-        } else {
-            welcomeText.material.color.set(0xffffff); // 白
-        }
-    }
-
     renderer.render(scene, camera);
 }
 animate();
