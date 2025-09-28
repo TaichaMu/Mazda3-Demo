@@ -40,7 +40,7 @@ export function startMain(container) {
 
     // 初期位置
     camera.position.set(radius, height, 0);
-    camera.lookAt(5, 1, 2);
+    camera.lookAt(5, 1, 0);
 
     function animate() {
         requestAnimationFrame(animate);
