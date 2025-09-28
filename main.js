@@ -28,7 +28,7 @@ loader.load('./models/mazda3.glb', (gltf) => {
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
-camera.position.set(0, 1, 5);
+camera.position.set(15, 15, 15);
 
 // アニメーションループ
 function animate() {
