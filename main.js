@@ -31,7 +31,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.autoRotate = true; // 自動回転を有効にする
-controls.autoRotateSpeed = 0.25; // 自動回転の速度を設定
+controls.autoRotateSpeed = 0.5; // 自動回転の速度を設定
 camera.position.set(5, 1, 0);
 // ユーザーが操作したら自動回転を止める
 controls.addEventListener('start', () => {
